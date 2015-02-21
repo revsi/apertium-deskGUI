@@ -13,8 +13,19 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    QtCUrl.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    QtCUrl.h
 
 FORMS    += mainwindow.ui
+DEFINES += CURL_STATICLIB
+INCLUDEPATH += /usr/include/curl
+LIBS += -L/usr/lib/x86_64-linux-gnu
+LIBS += -lcurl
+
+DISTFILES += \
+    apertium-deskGUI.pro.user \
+    Readme.md
+
