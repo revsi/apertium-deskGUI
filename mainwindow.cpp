@@ -81,15 +81,11 @@ void MainWindow::on_pushButton_clicked()
     QJsonObject jsonObject = jsonResponse.object();
     QJsonArray jsonArray = jsonObject["responseData"].toArray();
     QJsonObject jsonObject2 = jsonObject["responseData"].toObject();
-    qDebug() << jsonObject2;
+    //qDebug() << jsonObject2;
     QString text2 = jsonObject2["translatedText"].toString();
     qDebug() << text2;
-    foreach (const QJsonValue & value, jsonArray) {
-        QJsonObject obj = value.toObject();
-        translated.append(obj["translatedText"].toString());
-        qDebug() << "hey";
-    }
-  //  qDebug() << translated;
+    ui->textEdit_2->setText(text2);
+
 }
 
 void MainWindow::on_textEdit_textChanged()
