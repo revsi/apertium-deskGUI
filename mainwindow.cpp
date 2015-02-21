@@ -18,13 +18,6 @@ MainWindow::MainWindow(QWidget *parent) :
     opt[CURLOPT_FOLLOWLOCATION] = false;
     opt[CURLOPT_FAILONERROR] = false;
     opt[CURLOPT_NOPROXY] = "localhost";
-   QStringList headers;
-    headers
-        << "Accept  text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-        << "Accept-Encoding gzip, deflate"
-        << "Accept-Language ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"
-        << "User-Agent  Mozilla/5.0 (X11; Linux x86_64; rv:20.0) Gecko/20100101 Firefox/20.0";
-    opt[CURLOPT_HTTPHEADER] = headers;
     QString result = cUrl.exec(opt);
 
     if (cUrl.lastError().isOk()) {
@@ -34,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
         qDebug() << QString("Error: %1\nBuffer: %2")
                 .arg(cUrl.lastError().text()).arg(cUrl.errorBuffer());
     }
+   qDebug() << result;
     QRegExp re("\"([a-z_\\./\\-\\s]*)\"");
     QStringList list;
     int pos=0;
@@ -42,11 +36,14 @@ MainWindow::MainWindow(QWidget *parent) :
            list << re.cap(1);
            pos+=re.matchedLength();
     }
-
-    for(int i=0; i<list.length(); i++)
+    QStringList pairs;
+    QString temp;
+  //  qDebug() << list;
+    int listno = list.length()/2;
+    for(int i=0,j=0; i<listno;j=j+2, i++)
     {
-        qDebug() << list[i];
-        qDebug() << "==============";
+        temp = list[j+1]+"|"+list[j];
+        qDebug() << QString("%1").arg(temp);
     }
 
 }
