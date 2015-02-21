@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
         qDebug() << QString("Error: %1\nBuffer: %2")
                 .arg(cUrl.lastError().text()).arg(cUrl.errorBuffer());
     }
-   qDebug() << result;
+   //qDebug() << result;
     QRegExp re("\"([a-z_\\./\\-\\s]*)\"");
     QStringList list;
     int pos=0;
@@ -43,7 +43,12 @@ MainWindow::MainWindow(QWidget *parent) :
     for(int i=0,j=0; i<listno;j=j+2, i++)
     {
         temp = list[j+1]+"|"+list[j];
-        qDebug() << QString("%1").arg(temp);
+       // qDebug() << QString("%1").arg(temp);
+        pairs << temp;
+    }
+    for(int i = 0; i < listno; i++)
+    {
+            ui->comboBox->addItem(pairs[i],QVariant::fromValue(pairs[i]));
     }
 
 }
@@ -55,6 +60,22 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
+    QString targetpair =  ui->comboBox->currentText();
+    //http://localhost:2737/translate?langpair=kaz|tat&q=Сен+бардың+ба?
+
+    QtCUrl cUrl;
+    cUrl.setTextCodec("UTF-8");
+    QString text = ui->textEdit->toPlainText();
+    QUrl url("http://localhost:2737/translate?langpair="+targetpair+"&q="+text);
+    QtCUrl::Options opt;
+    opt[CURLOPT_URL] = url;
+    opt[CURLOPT_POST] = false;
+    opt[CURLOPT_FOLLOWLOCATION] = false;
+    opt[CURLOPT_FAILONERROR] = false;
+    opt[CURLOPT_NOPROXY] = "localhost";
+    QString result = cUrl.exec(opt);
+    qDebug() << result;
+    qDebug() << url;
 
 
 }
