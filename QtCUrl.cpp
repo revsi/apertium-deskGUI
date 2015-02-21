@@ -87,7 +87,7 @@ QtCUrl::~QtCUrl() {
 }
 
 
-void QtCUrl::setTextCodec(const char* codecName)    {
+void QtCUrl::setTextCodec(const char* codecName)	{
     _textCodec = QTextCodec::codecForName(codecName);
 }
 
@@ -110,17 +110,18 @@ QString QtCUrl::exec(Options& opt) {
 
 
 void QtCUrl::setOptions(Options& opt) {
-   Options defaults;
-   defaults[CURLOPT_FAILONERROR] = true;
-   defaults[CURLOPT_ERRORBUFFER].setValue(_errorBuffer);
-   defaults[CURLOPT_WRITEFUNCTION].setValue(&writer);
-   defaults[CURLOPT_WRITEDATA].setValue(&_buffer);
+    Options defaults;
+    defaults[CURLOPT_FAILONERROR] = true;
+    defaults[CURLOPT_ERRORBUFFER].setValue(_errorBuffer);
+    defaults[CURLOPT_WRITEFUNCTION].setValue(&writer);
+    defaults[CURLOPT_WRITEDATA].setValue(&_buffer);
+
 #ifdef QTCURL_DEBUG
     curl_easy_setopt(_curl, CURLOPT_VERBOSE, 1);
     curl_easy_setopt(_curl, CURLOPT_DEBUGFUNCTION, trace);
 #endif
 
-   OptionsIterator i(defaults);
+    OptionsIterator i(defaults);
 
     while (i.hasNext()) {
         i.next();
