@@ -9,6 +9,8 @@ Just For testing purposes
 How to execute
 -----------
 If you're on Linux, you should be able to get started with:
+
+
 if Installed qtCreator via QtInstaller then instead of qmake use ~/Qt/5.4/gcc_64/bin/qmake
 ::
 
