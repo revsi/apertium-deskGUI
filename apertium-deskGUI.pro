@@ -19,8 +19,6 @@ HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 
-LIBS += -L/usr/lib/x86_64-linux-gnu
-
 DISTFILES += \
     apertium-deskGUI.pro.user \
     Readme.md
