@@ -18,10 +18,8 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
-DEFINES += CURL_STATICLIB
-INCLUDEPATH += /usr/include/curl
+
 LIBS += -L/usr/lib/x86_64-linux-gnu
-LIBS += -lcurl
 
 DISTFILES += \
     apertium-deskGUI.pro.user \
