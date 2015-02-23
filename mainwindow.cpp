@@ -1,33 +1,37 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "QtCUrl.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    QtCUrl cUrl;
-    cUrl.setTextCodec("UTF-8");
+    // create custom temporary event loop on stack
+    QEventLoop eventLoop;
 
-    QUrl url("http://localhost:2737/listPairs");
+       // "quit()" the event-loop, when the network request "finished()"
+    QNetworkAccessManager mgr;
+    QObject::connect(&mgr, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit()));
 
-    QtCUrl::Options opt;
-    opt[CURLOPT_URL] = url;
-    opt[CURLOPT_POST] = false;
-    opt[CURLOPT_FOLLOWLOCATION] = false;
-    opt[CURLOPT_FAILONERROR] = false;
-    opt[CURLOPT_NOPROXY] = "localhost";
-    QString result = cUrl.exec(opt);
-
-    if (cUrl.lastError().isOk()) {
-       // qDebug() << result;
+       // the HTTP request
+    QNetworkRequest req( QUrl( QString("http://localhost:2737/listPairs") ) );
+    QNetworkReply *reply = mgr.get(req);
+    eventLoop.exec(); // blocks stack until "finished()" has been called
+    QString result;
+    if (reply->error() == QNetworkReply::NoError)
+    {
+           //success
+           result = (QString)reply->readAll();
+           qDebug() << "Success" <<result;
     }
-    else {
-        qDebug() << QString("Error: %1\nBuffer: %2")
-                .arg(cUrl.lastError().text()).arg(cUrl.errorBuffer());
+    else
+    {
+           //failure
+           qDebug() << "Failure" <<reply->errorString();
+           delete reply;
     }
-   //qDebug() << result;
+
+
     QRegExp re("\"([a-z_\\./\\-\\s]*)\"");
     QStringList list;
     int pos=0;
@@ -60,21 +64,35 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
+    // create custom temporary event loop on stack
+    QEventLoop eventLoop;
+
+       // "quit()" the event-loop, when the network request "finished()"
+    QNetworkAccessManager mgr;
+    QObject::connect(&mgr, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit()));
+
     QString targetpair =  ui->comboBox->currentText();
     //http://localhost:2737/translate?langpair=kaz|tat&q=Сен+бардың+ба?
 
-    QtCUrl cUrl;
-    cUrl.setTextCodec("UTF-8");
     QString text = ui->textEdit->toPlainText();
-    QUrl url("http://localhost:2737/translate?langpair="+targetpair+"&q="+text);
-    QtCUrl::Options opt;
-    opt[CURLOPT_URL] = url;
-    opt[CURLOPT_POST] = false;
-    opt[CURLOPT_FOLLOWLOCATION] = false;
-    opt[CURLOPT_FAILONERROR] = false;
-    opt[CURLOPT_NOPROXY] = "localhost";
-    QString result = cUrl.exec(opt);
-
+    QNetworkRequest req( QUrl( QString("http://localhost:2737/translate?langpair="+targetpair+"&q="+text) ) );
+    QNetworkReply *reply = mgr.get(req);
+    eventLoop.exec(); // blocks stack until "finished()" has been called
+    QString result;
+    QByteArray temp;
+    if (reply->error() == QNetworkReply::NoError)
+    {
+           //success
+           temp = reply->readAll();
+           result = (QString)temp;
+           qDebug() << "Success" <<result;
+    }
+    else
+    {
+           //failure
+           qDebug() << "Failure" <<reply->errorString();
+           delete reply;
+    }
     QStringList translated;
     QJsonDocument jsonResponse = QJsonDocument::fromJson(result.toUtf8());
    // qDebug() << jsonResponse;

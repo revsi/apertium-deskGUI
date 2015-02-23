@@ -13,11 +13,9 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    QtCUrl.cpp
+        mainwindow.cpp
 
-HEADERS  += mainwindow.h \
-    QtCUrl.h
+HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 DEFINES += CURL_STATICLIB
