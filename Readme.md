@@ -6,7 +6,7 @@ Developed on Qt 5.4.0 (GCC 4.6.1, 64 bit)
 
 Next Task
 ---------
--> ~~ Instead of curl use Qt inbuilt network tools . ~~
+~~Instead of curl use Qt inbuilt network tools~~
 
 How to execute
 -----------
